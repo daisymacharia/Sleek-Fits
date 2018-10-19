@@ -1,6 +1,7 @@
 # import * from "./generated/prisma.graphql"
 
 type Query {
+<<<<<<< HEAD
 	items(
 		where: ItemWhereInput
 		orderBy: ItemOrderByInput
@@ -10,6 +11,9 @@ type Query {
 	item(where: ItemWhereUniqueInput): Item
 	itemsConnection(where: ItemWhereInput): ItemConnection!
 	me: User
+=======
+	items: [Item]!
+>>>>>>> - Setting up prisma and graphql yoga
 }
 
 type Mutation {
@@ -20,6 +24,7 @@ type Mutation {
 		image: String!
 		largeImage: String!
 	): Item!
+<<<<<<< HEAD
 	updateItem(
 		id: ID!
 		title: String
@@ -30,4 +35,6 @@ type Mutation {
 	): Item!
 	deleteItem(id: ID!): Item
 	signup(email: String!, password: String!, name: String!): User!
+=======
+>>>>>>> - Setting up prisma and graphql yoga
 }
