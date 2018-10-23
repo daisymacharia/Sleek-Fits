@@ -33,6 +33,7 @@ const Mutations = {
 		//  TODO
 		// 3. delete it
 		return ctx.db.mutation.deleteItem({ where }, info);
+
 	}
 };
 
