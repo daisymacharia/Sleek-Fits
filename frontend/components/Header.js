@@ -15,7 +15,7 @@ Router.onRouteChangeError = () => {
 };
 
 const Logo = styled.h1`
-	font-size: 3rem;
+	font-size: 2rem;
 	margin-left: 2rem;
 	position: relative;
 	transform: skew(-7deg);
@@ -60,7 +60,7 @@ const Header = ({}) => (
 		<div className="bar">
 			<Logo>
 				<Link href="/">
-					<a>Sick Fits</a>
+					<a>Sick Fits!</a>
 				</Link>
 			</Logo>
 			<Nav />

@@ -7,9 +7,10 @@ const Item = styled.div`
 	position: relative;
 	display: flex;
 	flex-direction: column;
+	margin: 2rem;
 	img {
 		width: 100%;
-		height: 400px;
+		height: 360px;
 		object-fit: cover;
 	}
 	p {
