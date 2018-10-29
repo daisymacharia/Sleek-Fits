@@ -689,6 +689,15 @@ enum Permission {
 	PERMISSIONUPDATE
 }
 
+enum Permission {
+	ADMIN
+	USER
+	ITEMCREATE
+	ITEMDELETE
+	ITEMUPDATE
+	PERMISSIONUPDATE
+}
+
 type Query {
 	users(
 		where: UserWhereInput
