@@ -78,7 +78,7 @@ class CreateItem extends Component {
 								query: { id: res.data.createItem.id }
 							});
 						}}
-     >
+					>
 						<Error error={error} />
 						<fieldset disabled={loading} aria-busy={loading}>
 							<label htmlFor="file">
@@ -90,7 +90,7 @@ class CreateItem extends Component {
 									placeholder="Upload an image"
 									required
 									onChange={this.uploadFile}
-        />
+								/>
 								{this.state.image && (
 									<img src={this.state.image} alt="Upload Preview" />
 								)}
