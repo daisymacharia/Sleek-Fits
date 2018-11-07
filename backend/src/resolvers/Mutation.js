@@ -3,13 +3,24 @@ const jwt = require("jsonwebtoken");
 const { randomBytes } = require("crypto");
 const { promisify } = require("util");
 const { makeANiceEmail, transport } = require("../mail");
+const { hasPermission } = require("../utils");
 
 const Mutations = {
 	async createItem(parent, args, ctx, info) {
-		// TODO check if user is logged in
+		if (!ctx.request.userId) {
+			throw new Error("You must be logged in to create an item");
+		}
 		const item = await ctx.db.mutation.createItem(
 			{
-				data: { ...args }
+				data: {
+					// This is how you create a relationship btwn the item and the user
+					user: {
+						connect: {
+							id: ctx.request.userId
+						}
+					},
+					...args
+				}
 			},
 			info
 		);
@@ -36,9 +47,15 @@ const Mutations = {
 	async deleteItem(parent, args, ctx, info) {
 		const where = { id: args.id };
 		// 1. find the item
-		const item = await ctx.db.query.item({ where }, `{id, title}`);
+		const item = await ctx.db.query.item({ where }, `{id, title, user {id}}`);
 		// 2. check if they own it or have the permissions
-		//  TODO
+		const ownsItem = item.user.id === ctx.request.userId;
+		const hasPermissions = ctx.request.user.permissions.some(permission =>
+			["ADMIN", "ITEMDELETE"].includes(permission)
+		);
+		if (!ownsItem && !hasPermissions) {
+			throw new Error("You do not have permission to do that");
+		}
 		// 3. delete it
 		return ctx.db.mutation.deleteItem({ where }, info);
 	},
@@ -143,16 +160,19 @@ const Mutations = {
 		// 3. Hash new passwords
 		const password = await bcrypt.hash(args.password, 10);
 		// 4. save new password to user and remove old rest token field
-		const updatedUser = await ctx.db.mutation.updateUser({
-			where: {
-				email: user.email
+		const updatedUser = await ctx.db.mutation.updateUser(
+			{
+				where: {
+					email: user.email
+				},
+				data: {
+					password,
+					resetToken: null,
+					resetTokenExpiry: null
+				}
 			},
-			data: {
-				password,
-				resetToken: null,
-				resetTokenExpiry: null
-			}
-		});
+			info
+		);
 		// 5. Generate jwt
 		const token = jwt.sign({ userId: updatedUser.id }, process.env.APP_SECRET);
 		// 6. set the JWT to cookies
@@ -162,6 +182,33 @@ const Mutations = {
 		});
 		// 7. return new user
 		return user;
+	},
+
+	async updatePermissions(parent, args, ctx, info) {
+		// 1. Check if they are logged in
+		if (!ctx.request.userId) {
+			throw new Error("You must be logged in");
+		}
+		// Query the current users
+		const currentUser = await ctx.db.query.user(
+			{
+				where: { id: ctx.request.userId }
+			},
+			info
+		);
+		console.log(currentUser);
+
+		// check if they have the required updatePermissions
+		hasPermission(currentUser, ["ADMIN", "PERMISSIONUPDATE"]);
+
+		// update the permission
+		return ctx.db.mutation.updateUser(
+			{
+				where: { id: args.userId },
+				data: { permissions: { set: args.permissions } }
+			},
+			info
+		);
 	}
 };
 
