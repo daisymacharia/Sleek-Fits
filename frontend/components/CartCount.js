@@ -1,6 +1,6 @@
-import React from 'react'
-import styled from 'styled-components'
-import { TransitionGroup, CSSTransition } from "react-transition-group"
+import React from "react";
+import styled from "styled-components";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 const Dot = styled.div`
   background: ${props => props.theme.red};
@@ -28,34 +28,32 @@ const AnimationStyles = styled.span`
     transform: scale(4) rotateX(0.5turn);
   }
   .count-enter-active {
-    transform: rotateX(0)
+    transform: rotateX(0);
   }
   .count-exit {
     top: 0;
     position: absolute;
-    transform: scale(4) rotateX(0)
+    transform: scale(4) rotateX(0);
   }
-  .count-exit-active{
+  .count-exit-active {
     transform: rotateX(0.5turn);
   }
-`
+`;
 
-const CartCount = ({count}) => (
+const CartCount = ({ count }) => (
   <AnimationStyles>
-      <TransitionGroup>
+    <TransitionGroup>
       <CSSTransition
         unmountOnExit
         className="count"
         classNames="count"
         key={count}
-        timeout={{enter: 400, exit: 400}}
+        timeout={{ enter: 400, exit: 400 }}
       >
         <Dot> {count}</Dot>
       </CSSTransition>
     </TransitionGroup>
   </AnimationStyles>
-
-
 );
 
 export default CartCount;
