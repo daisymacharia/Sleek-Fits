@@ -1,6 +1,7 @@
 endpoint: ${env:PRISMA_ENDPOINT}
+# endpoint: https://eu1.prisma.sh/daisy-macharia-4b88a8/sleek-fits/dev/backend/dev
 datamodel: datamodel.prisma
-# secret: ${env:PRISMA_SECRET}
+secret: ${env:PRISMA_SECRET}
 
 hooks:
   post-deploy:
